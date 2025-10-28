@@ -1,0 +1,57 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+typedef struct{
+char* dayName;
+int date;
+char* activity;
+}DayInfo;
+DayInfo* create(){
+DayInfo* day=(DayInfo*)malloc(sizeof(DayInfo));
+if(day==NULL){
+fprintf(stderr,"Memory allocation failed.\n");
+exit(EXIT_FAILURE);
+}
+day->dayName=NULL;
+day->activity=NULL;
+return day;
+}
+void read(DayInfo*day){
+char temp[100];
+printf("Enter day name:");
+fgets(temp,sizeof(temp),stdin);
+temp[strcspn(temp,"\n")]='\0';
+day->dayName=strdup(temp);
+printf("Enter date:");
+scanf("%d",&day->date);
+getchar();
+printf("Enter activity:");
+fgets(temp,sizeof(temp),stdin);
+temp[strcspn(temp,"\n")]='\0';
+day->activity=strdup(temp);
+}
+void display(DayInfo* week,int numDays){
+printf("Week's Activity Details:\n");
+for(int i=0;i<numDays;i++){
+printf("Day %d- %s(Date:%d) : activity :%s\n",i+1,week[i].dayName,week[i].date,week[i].activity);
+}
+}
+int main(){
+int numDays=7;
+DayInfo* week=(DayInfo*)malloc(numDays* sizeof(DayInfo));
+if(week==NULL){
+fprintf(stderr,"Memory allocation failed.\n");
+return EXIT_FAILURE;
+}
+for(int i=0;i<numDays;i++){
+week[i]=*create();
+read(&week[i]);
+}
+display(week,numDays);
+for(int i=0;i<numDays;i++){
+free(week[i].dayName);
+free(week[i].activity);
+}
+free(week);
+return 0;
+}
